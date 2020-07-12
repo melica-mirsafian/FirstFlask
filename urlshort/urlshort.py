@@ -3,7 +3,8 @@ import json
 import os
 from werkzeug.utils import secure_filename
 
-bp = Blueprint('urlshort',__name__)
+bp = Blueprint('urlshort', __name__)
+
 
 @bp.route('/')
 def home():
