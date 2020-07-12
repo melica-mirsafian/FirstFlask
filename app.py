@@ -1,7 +1,9 @@
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, render_template, request, redirect, url_for, flash
 import json
-app = Flask(__name__)
+import os
 
+app = Flask(__name__)
+app.secret_key = 'lkdkjfvjhdklkhuescb'
 
 @app.route('/')
 def home():
@@ -12,6 +14,14 @@ def home():
 def your_url():
     if request.method == 'POST':
         urls = {}
+        if os.path.exists('urls.json'):
+            with open('urls.json', 'r') as urls_file:
+                urls = json.load(urls_file)
+
+        if request.form['code'] in urls:
+            flash('That shortened code is taken. Please pick something else and retry.')
+            return redirect(url_for('home'))
+
         urls[request.form['code']] = {'url': request.form['url']}
         with open('urls.json', 'w') as url_file:
             json.dump(urls, url_file)
